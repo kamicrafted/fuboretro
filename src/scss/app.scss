@@ -1,4 +1,6 @@
 @import "vars";
+@import "forms";
+@import "buttons";
 
 html {
   box-sizing: border-box;
@@ -22,4 +24,32 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: auto;
   margin: 0;
   padding: 0;
+}
+
+/* -----------------------------------------
+Icons
+----------------------------------------- */
+.icon-close {
+  width: 20px;
+  height: 20px;
+  background-color: grey;
+}
+
+
+/* -----------------------------------------
+Transitions
+----------------------------------------- */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s $easeInOutQuad;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all .3s $easeOutQuad;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-30px);
 }

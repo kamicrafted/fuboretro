@@ -13,7 +13,7 @@
 
 #app {
   height: 100%;
-  padding: 10px;
+  padding: 5px;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

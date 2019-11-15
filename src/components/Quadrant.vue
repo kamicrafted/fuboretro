@@ -1,11 +1,18 @@
 <template>
-  <div class="quad" :class="'quad--' + className">
+  <div class="quad" :class="'quad--' + quadrant.class">
     <div class="quad__header">
-      <h2>{{ sectionName }}</h2>
-      <div class="quad__add" @click="addItem(className, $event)"></div>
+      <h2>{{ quadrant.title }}</h2>
+      <div class="quad__add" @click="addItem(index, quadrant.class, $event)"></div>
     </div>
     <div class="quad__body">
-      <ListItem v-for="n in 50" :key="'item' + n" />
+      <transition-group name="list" tag="div">
+        <ListItem v-for="(item, index) in list" 
+                  @remove-item="removeItem"
+                  :key="'item' + index" 
+                  :item="item"
+                  :index="index"
+                  />
+      </transition-group>
     </div>
   </div>
 </template>
@@ -13,16 +20,23 @@
 <script>
 import ListItem from '@/components/ListItem'
 export default {
-  name: 'HelloWorld',
+  name: 'list-item',
   components: { ListItem },
   props: {
-    sectionName: String,
-    className: String
+    quadrant: Object,
+    index: Number,
+    list: Array
   },
   methods: {
-    addItem (type, e) {
-      window.console.log(type);
+    addItem (index, type, e) {
+      // window.console.log(type);
       window.console.log(e);
+      this.$emit('add-item', index, type);
+    },
+
+    removeItem (index) {
+      // alert(index);
+      this.list.splice(index, 1)
     }
   }
 }
@@ -32,8 +46,8 @@ export default {
 @import "@/scss/app";
 
 .quad {
-  width: calc(50vw - 20px);
-  height: calc(50vh - 20px);
+  width: calc(50% - 10px);
+  height: calc(50% - 10px);
   background-color: $color-quadrant;
   border: 1px solid $color-border;
   border-radius: $border-radius;
@@ -58,6 +72,12 @@ export default {
     height: 26px;
     border-radius: 30px;
     box-shadow: 0 5px 5px -2px rgba(black, .2);
+    transition: all .25s $easeInOutQuart;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 5px -2px rgba(black, .2);
+    }
 
     &:before {
       content: "";
