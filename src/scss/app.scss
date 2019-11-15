@@ -1,6 +1,7 @@
 @import "vars";
 @import "forms";
 @import "buttons";
+@import "modals";
 
 html {
   box-sizing: border-box;
@@ -32,7 +33,6 @@ Icons
 .icon-close {
   width: 20px;
   height: 20px;
-  background-color: grey;
 }
 
 

@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Header @export-retro="exportRetro" />
     <transition name="fade">
       <Modal v-if="modalVisible"
             @hide-modal="hideModal"
@@ -21,6 +22,7 @@
 <script>
 import Quadrant from '@/components/Quadrant';
 import Modal from '@/components/Modal';
+import Header from '@/components/Header';
 export default {
   name: 'home',
   data () {
@@ -49,21 +51,17 @@ export default {
           class: "next"
         }
       ],
-      lists: [
-        [
-        ],
-        [
-        ],
-        [
-        ],
-        [
-        ],
-      ],
     }
   },
   components: {
     Quadrant,
-    Modal
+    Modal,
+    Header
+  },
+  computed: {
+    lists () {
+     return this.$store.state.lists
+    }
   },
   methods: {
     addItem (index, type) {
@@ -81,13 +79,24 @@ export default {
     },
 
     createNewItem (index, author, description) {
-      this.lists[index].push({
-        author,
+      window.console.log("Crreating new item!");
+      this.$store.commit('addItemToList', {
+        index, 
+        author, 
         description
-      });
+      })
+      // this.lists[index].push({
+      //   author,
+      //   description
+      // });
 
       this.hideModal();
       // window.console.log(index);
+    },
+
+    exportRetro () {
+      window.console.log("-----------------------------------------");
+      window.console.log(this.lists);
     }
   }
 }
@@ -99,7 +108,18 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
-  height: calc(100% - 60px);
-  margin-top: 60px;
+  height: calc(100% - 50px);
+  margin-top: 50px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
 }
 </style>

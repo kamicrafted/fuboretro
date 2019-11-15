@@ -22,11 +22,11 @@ import ListItem from '@/components/ListItem'
 export default {
   name: 'list-item',
   components: { ListItem },
-  props: {
-    quadrant: Object,
-    index: Number,
-    list: Array
-  },
+  props: [
+    "quadrant",
+    "index",
+    "list"
+  ],
   methods: {
     addItem (index, type, e) {
       // window.console.log(type);

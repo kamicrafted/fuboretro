@@ -1,7 +1,39 @@
 button,
 .button {
-  padding: 5px 10px;
+  padding: 8px 16px;
+  font-size: 12px;
   border: 1px solid $color-border-input;
-  border-radius: $border-radius-input;
-  background-color: white;
+  border-radius: $border-radius-button;
+  background-color: transparent;
+  font-weight: bold;
+
+  &--export {
+    background-color: $color-button-export;
+    color: white;
+    border: 1px solid black;
+  }
+
+  &--good {
+    background-color: $color-good;
+    border: 1px solid darken($color-good, 10%);
+    color: white;
+  }
+
+  &--bad {
+    background-color: $color-bad;
+    border: 1px solid darken($color-bad, 10%);
+    color: white;
+  }
+
+  &--question {
+    background-color: $color-question;
+    border: 1px solid darken($color-question, 10%);
+    color: white;
+  }
+
+  &--next {
+    background-color: $color-next;
+    border: 1px solid darken($color-next, 10%);
+    color: white;
+  }
 }

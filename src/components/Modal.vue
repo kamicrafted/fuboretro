@@ -7,7 +7,10 @@
       <div class="modal__body">
         <div class="field__group">
           <label for="name">Name</label>
-          <input name="name" type="text" v-model="author">
+          <!-- <input name="name" type="text" v-model="author"> -->
+          <select name="author" id="author">
+            <option v-for="user in userList" :key="user.name" :value="user.name">{{ user.name }}</option>
+          </select>
         </div>
         <div class="field__group">
           <label for="description">Description</label>
@@ -15,7 +18,7 @@
         </div>
       </div>
       <div class="modal__footer">
-        <button @click="createNewItem(index, author, description)">Add</button>
+        <button @click="createNewItem(index, author, description)" class="button" :class="'button--'+quadrant[index].class">Add</button>
       </div>
     </div>
   </div>
@@ -26,13 +29,17 @@ export default {
   name: 'modal',
   data () {
     return {
-      author: "",
       description: ""
     }
   },
   props: {
     quadrant: Array,
     index: Number
+  },
+  computed: {
+    userList () {
+      return this.$store.state.users;
+    }
   },
   methods: {
     hideModal () {
@@ -46,39 +53,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/app';
-
-.modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  z-index: 5000;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(black, .8);
-
-  &__surface {
-    width: 500px;
-    height: auto;
-    background-color: white;
-    border-radius: $border-radius;
-    box-shadow: 0 20px 50px rgba(black, .5), 0 10px 10px -5px rgba(black, .5);
-  }
-
-  &__header {
-    padding: 10px 20px;
-    border-bottom: 1px solid $color-border;
-    font-weight: bold;
-  }
-
-  &__body {
-    padding: 20px;
-  }
-
-  &__footer {
-    padding: 10px 20px;
-    border-top: 1px solid $color-border;
-  }
-}
 </style>
