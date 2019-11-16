@@ -1,10 +1,14 @@
 <template>
-<div class="item">
+<div class="item" >
   <div class="item__left">
+    <div class="handle"></div>
     <div class="avatar"></div>
     <h3>{{ item.description }}</h3>
   </div>
-  <div class="icon-close" @click="removeItem(index)"></div>
+  <div class="actions">
+    <div class="icon-edit" @click="editItem(itemIndex)"></div>
+    <div class="icon-close" @click="removeItem(itemIndex)"></div>
+  </div>
 </div>
 </template>
 
@@ -18,12 +22,16 @@ export default {
   },
   props: [
     "item",
-    "index"
+    "itemIndex"
   ],
   methods: {
-    removeItem (index) {
-      window.console.log(index);
-      this.$emit('remove-item', index)
+    removeItem (itemIndex) {
+      window.console.log('removed item' + itemIndex);
+      this.$emit('remove-item', itemIndex)
+    },
+
+    editItem (itemIndex) {
+      this.$emit('edit-item', itemIndex, this.item.description)
     }
   },
 }
@@ -42,9 +50,10 @@ export default {
   color: lighten($color-text, 20%);
   font-family: arial, sans-serif;
   font-size: 14px;
+  transition: all .15s $easeInOutQuad;
 
   &:hover {
-    .icon-close {
+    .actions {
       opacity: 1;
     }
   }
@@ -66,10 +75,19 @@ export default {
     background: #eee;
   }
 
-  .icon-close {
-    position: relative;
+  .actions {
+    display: flex;
+    align-items: center;
     opacity: 0;
     transition: all .15s $easeInOutQuad;
+  }
+
+  .icon-edit {
+    margin-right: 5px;
+  }
+
+  .icon-close {
+    position: relative;
 
     &:before {
       content: "";
@@ -94,8 +112,22 @@ export default {
     }
   }
 
+  .handle {
+    flex: 1 0 auto;
+    display: block;
+    width: 10px;
+    height: 20px;
+    margin-right: 10px;
+    background-color: #dadada;
+  }
+
   // &:last-child {
   //   border: none;
   // }
+}
+
+.ghost {
+  background-color: white !important;
+  box-shadow: 0 5px 10px rgba(black, .25);
 }
 </style>

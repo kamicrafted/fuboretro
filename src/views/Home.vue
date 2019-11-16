@@ -1,20 +1,24 @@
 <template>
   <div class="home">
     <Header @export-retro="exportRetro" />
+
     <transition name="fade">
       <Modal v-if="modalVisible"
             @hide-modal="hideModal"
             @create-new-item="createNewItem"
             :quadrant="quadrantData"
             :index="currentModalIndex"
+            :error-message="errorMsg"
              />
     </transition>
+
     <Quadrant v-for="(quadrant, index) in quadrantData" 
               :key="'quad'+index" 
               :index="index"
               :quadrant="quadrant"
               :list="lists[index]"
               @add-item="addItem"
+              @edit-item="editItem"
               />
   </div>
 </template>
@@ -23,12 +27,15 @@
 import Quadrant from '@/components/Quadrant';
 import Modal from '@/components/Modal';
 import Header from '@/components/Header';
+
 export default {
   name: 'home',
   data () {
     return {
       modalVisible: false,
       currentModalIndex: null,
+      description: "",
+      errorMsg: "",
       quadrantData: [
         {
           title: "Things that went well",
@@ -65,33 +72,40 @@ export default {
   },
   methods: {
     addItem (index, type) {
-      window.console.log(type);
-      this.showModal(index);
+      this.showModal(index, type);
     },
 
-    showModal (index) {
+    editItem (index, type, description) {
+      window.console.log(index, type, description);
+      this.showModal(index, type, description);
+    },
+
+    createNewItem (index, author, description) {
+      window.console.log(author + ' is adding "' + description + '" to quadrant ' + index);
+
+      if (description) {
+        this.$store.commit('addItemToList', {
+          index, 
+          author, 
+          description
+        })
+
+        this.hideModal();
+      } else {
+        this.errorMsg = "Please enter a description"
+      }
+      // window.console.log(index);
+    },
+
+    showModal (index, type, description) {
       this.currentModalIndex = index;
       this.modalVisible = true;
+
+      window.console.log('item: ' + index, ', quadrant: ' + type, ', description: ' + description);
     },
 
     hideModal () {
       this.modalVisible = false;
-    },
-
-    createNewItem (index, author, description) {
-      window.console.log("Crreating new item!");
-      this.$store.commit('addItemToList', {
-        index, 
-        author, 
-        description
-      })
-      // this.lists[index].push({
-      //   author,
-      //   description
-      // });
-
-      this.hideModal();
-      // window.console.log(index);
     },
 
     exportRetro () {
@@ -110,16 +124,5 @@ export default {
   justify-content: space-around;
   height: calc(100% - 50px);
   margin-top: 50px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px;
 }
 </style>

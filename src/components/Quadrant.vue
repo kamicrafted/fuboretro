@@ -5,23 +5,45 @@
       <div class="quad__add" @click="addItem(index, quadrant.class, $event)"></div>
     </div>
     <div class="quad__body">
-      <transition-group name="list" tag="div">
+      <!-- <transition-group name="list" tag="div">
         <ListItem v-for="(item, index) in list" 
                   @remove-item="removeItem"
                   :key="'item' + index" 
                   :item="item"
                   :index="index"
                   />
-      </transition-group>
+      </transition-group> -->
+      
+      <draggable
+        :id="quadrant.class"
+        group="group"
+        handle=".handle"
+        class="list-group"
+        ghost-class="ghost"
+        draggable=".item"
+        :list="list"
+      >
+        <transition-group name="list" tag="div">
+            <ListItem v-for="(item, index) in list"
+                      @edit-item="editItem"
+                      @remove-item="removeItem"
+                      :key="'item' + index"   
+                      :item="item"
+                      :index="index"
+                      />
+        </transition-group>
+    </draggable>
     </div>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import ListItem from '@/components/ListItem'
+
 export default {
   name: 'list-item',
-  components: { ListItem },
+  components: { ListItem, draggable },
   props: [
     "quadrant",
     "index",
@@ -32,6 +54,10 @@ export default {
       // window.console.log(type);
       window.console.log(e);
       this.$emit('add-item', index, type);
+    },
+
+    editItem (index) {
+      this.$emit('edit-item', index);
     },
 
     removeItem (index) {

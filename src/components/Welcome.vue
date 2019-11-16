@@ -10,7 +10,7 @@
         </p>
 
         <div class="field__group">
-          <input type="text" v-model="user" placeholder="Enter your name">
+          <input type="text" ref="username" v-model="user" placeholder="Enter your name">
         </div>
       </div>
       <div class="modal__footer">
@@ -33,6 +33,9 @@ export default {
       this.$store.commit('saveUser', this.user);
       this.$emit('hide-welcome');
     },
+  },
+  mounted () {
+    this.$nextTick(() => this.$refs.username.focus())
   }
 }
 </script>
