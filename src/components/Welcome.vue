@@ -32,6 +32,7 @@ export default {
     hideWelcome () {
       this.$store.commit('saveUser', this.user);
       this.$emit('hide-welcome');
+      window.console.log('Local user commited: ' + this.user);
     },
   },
   mounted () {

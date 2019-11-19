@@ -25,13 +25,14 @@ export default {
     "itemIndex"
   ],
   methods: {
-    removeItem (itemIndex) {
-      window.console.log('removed item' + itemIndex);
-      this.$emit('remove-item', itemIndex)
+    removeItem (index) {
+      window.console.log('removed item' + index);
+      this.$emit('remove-item', index)
     },
 
-    editItem (itemIndex) {
-      this.$emit('edit-item', itemIndex, this.item.description)
+    editItem (itemIndex, e) {
+      window.console.log('Started editing item from ListItem #: ' + itemIndex);
+      this.$emit('edit-item', itemIndex, e)
     }
   },
 }

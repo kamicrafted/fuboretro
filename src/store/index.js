@@ -24,11 +24,21 @@ export default new Vuex.Store({
   mutations: {
     addItemToList: (state, payload) => {
       state.lists[payload.index].push({
+        'id': payload.id,
+        'quadrant': payload.index,
         'author': payload.author,
         'description': payload.description
       });
 
       window.console.log(state.lists[payload.index]);
+    },
+
+    updateItem: (state, payload) => {
+      window.console.log('Before update: ' + state.lists[payload.index][payload.id].description);
+
+      state.lists[payload.index][payload.id].description = payload.description;
+
+      window.console.log('After update: ' + state.lists[payload.index][payload.id].description);
     },
 
     saveUser: (state, user) => {

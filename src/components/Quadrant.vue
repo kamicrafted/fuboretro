@@ -2,7 +2,7 @@
   <div class="quad" :class="'quad--' + quadrant.class">
     <div class="quad__header">
       <h2>{{ quadrant.title }}</h2>
-      <div class="quad__add" @click="addItem(index, quadrant.class, $event)"></div>
+      <div class="quad__add" @click="addItem(quadrantIndex, quadrant.class, $event)"></div>
     </div>
     <div class="quad__body">
       <!-- <transition-group name="list" tag="div">
@@ -24,12 +24,12 @@
         :list="list"
       >
         <transition-group name="list" tag="div">
-            <ListItem v-for="(item, index) in list"
+            <ListItem v-for="(item, itemIndex) in list"
                       @edit-item="editItem"
                       @remove-item="removeItem"
-                      :key="'item' + index"   
+                      :key="'item' + itemIndex"   
                       :item="item"
-                      :index="index"
+                      :itemIndex="itemIndex"
                       />
         </transition-group>
     </draggable>
@@ -46,18 +46,20 @@ export default {
   components: { ListItem, draggable },
   props: [
     "quadrant",
-    "index",
+    "quadrantIndex",
     "list"
   ],
   methods: {
     addItem (index, type, e) {
       // window.console.log(type);
-      window.console.log(e);
+      window.console.log('Event object for addItem' + e);
       this.$emit('add-item', index, type);
     },
 
-    editItem (index) {
-      this.$emit('edit-item', index);
+    editItem (itemIndex, e) {
+      window.console.log('Quadrant ' + this.quadrantIndex);
+      window.console.log('Item ' + itemIndex);
+      this.$emit('edit-item', itemIndex, this.quadrantIndex, e);
     },
 
     removeItem (index) {

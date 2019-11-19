@@ -6,17 +6,20 @@
       <Modal v-if="modalVisible"
             @hide-modal="hideModal"
             @create-new-item="createNewItem"
-            :quadrant="quadrantData"
-            :index="currentModalIndex"
+            @update-item="updateItem"
+            :quadrantData="quadrantData"
+            :quadrantIndex="currentQuadrantIndex"
+            :id="currentItemID"
             :error-message="errorMsg"
+            :description="editDescription"
              />
     </transition>
 
-    <Quadrant v-for="(quadrant, index) in quadrantData" 
-              :key="'quad'+index" 
-              :index="index"
+    <Quadrant v-for="(quadrant, quadrantIndex) in quadrantData" 
+              :key="'quad'+quadrantIndex" 
+              :quadrantIndex="quadrantIndex"
               :quadrant="quadrant"
-              :list="lists[index]"
+              :list="lists[quadrantIndex]"
               @add-item="addItem"
               @edit-item="editItem"
               />
@@ -33,8 +36,9 @@ export default {
   data () {
     return {
       modalVisible: false,
-      currentModalIndex: null,
+      currentQuadrantIndex: null,
       description: "",
+      currentItemID: null,
       errorMsg: "",
       quadrantData: [
         {
@@ -68,23 +72,29 @@ export default {
   computed: {
     lists () {
      return this.$store.state.lists
+    },
+
+    editDescription () {
+      window.console.log('Editing description for ' + this.description);
+      if (this.description) {
+        return this.description
+      } else {
+        return ""
+      }
     }
   },
   methods: {
-    addItem (index, type) {
-      this.showModal(index, type);
+    addItem (itemIndex, type) {
+      this.showModal(itemIndex, type);
     },
 
-    editItem (index, type, description) {
-      window.console.log(index, type, description);
-      this.showModal(index, type, description);
-    },
-
-    createNewItem (index, author, description) {
-      window.console.log(author + ' is adding "' + description + '" to quadrant ' + index);
+    createNewItem (id, index, author, description) {
+      window.console.log(author + ' is adding "' + description + '" to quadrant ' + index + ' item ' + id);
+      // this.id = this.$store.state.lists[this.index].length;
 
       if (description) {
         this.$store.commit('addItemToList', {
+          id,
           index, 
           author, 
           description
@@ -94,18 +104,38 @@ export default {
       } else {
         this.errorMsg = "Please enter a description"
       }
-      // window.console.log(index);
     },
 
-    showModal (index, type, description) {
-      this.currentModalIndex = index;
+    editItem (itemIndex, quadrantIndex) {
+      this.description = this.$store.state.lists[quadrantIndex][itemIndex].description;
+      this.showModal(quadrantIndex, null, this.description, itemIndex);
+    },
+
+    updateItem (quadrant, id, description) {
+      this.$store.state.lists[quadrant][id].description = description;
+
+      this.hideModal();
+    },
+
+    showModal (quadrantIndex, type, description, id) { // clicking on item should pass through description value as part of event. if it exists, then pass into edit modal
+      this.currentQuadrantIndex = quadrantIndex;
       this.modalVisible = true;
 
-      window.console.log('item: ' + index, ', quadrant: ' + type, ', description: ' + description);
+      if (type == null) {
+        this.description = description;
+        this.currentItemID = id;
+
+        window.console.log('***** ' + this.currentItemID);
+      }
+
+      window.console.log('DSC: ' + description)
+
+      window.console.log('Opened Modal for Quadrant: ' + quadrantIndex, '( ' + type, '), Description: ' + description);
     },
 
     hideModal () {
       this.modalVisible = false;
+      window.console.log('Closed Modal')
     },
 
     exportRetro () {

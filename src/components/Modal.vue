@@ -2,7 +2,7 @@
   <div class="modal" @click="hideModal">
     <div class="modal__surface" @click.stop>
       <div class="modal__header">
-        <h2>{{ quadrant[index].addTitle }}</h2>
+        <h2>{{ quadrantData[quadrantIndex].addTitle }}</h2>
       </div>
       <div class="modal__body">
         <div class="field__group">
@@ -31,7 +31,8 @@
         <p class="error">
           {{ errorMessage }}
         </p>
-        <button @click="createNewItem(index, selectedUser, description)" class="button" :class="'button--'+quadrant[index].class">Add</button>
+        <button v-if="id" @click="updateItem(quadrantIndex, id, description)" class="button" :class="'button--'+quadrantData[quadrantIndex].class">Update</button>
+        <button v-else @click="createNewItem(quadrantIndex, selectedUser, description)" class="button" :class="'button--'+quadrantData[quadrantIndex].class">Add</button>
       </div>
     </div>
   </div>
@@ -46,18 +47,20 @@ export default {
   data () {
     return {
       // description: this.$store.state.lists[this.index],
-      description: "",
       selectedUser: this.$store.state.user,
       pack: packEmoji,
-      showEmoji: false 
+      showEmoji: false,
+      tempDescription: this.description 
     }
   },
   props: {
-    quadrant: Array,
-    index: Number,
+    quadrantData: Array,
+    quadrantIndex: Number,
     errorMessage: String,
     contentForEdit: String,
-    labelSearch: { type: String, default: 'Pesquisar...' },
+    description: String,
+    id: Number,
+    labelSearch: { type: String, default: 'Search...' },
     showCategory: { type: Boolean, default: true },
     emojisByRow: { type: Number, default: 5}
   },
@@ -71,8 +74,16 @@ export default {
     userList () {
       return this.$store.state.users;
     },
-    emojisNative() {
+    emojisNative () {
       return packEmoji;
+    },
+    getDescription: {
+      set (val) {
+        this.tempDescription = val;
+      },
+      get () {
+        return this.tempDescription;
+      }
     }
   },
 
@@ -82,11 +93,14 @@ export default {
     },
 
     createNewItem (index, author, description) {
-      this.$emit('create-new-item', index, author, description);
+      this.id = this.$store.state.lists[this.quadrantIndex].length;
+      this.$emit('create-new-item', this.id, index, author, description);
+      // window.console.log('##### ' + this.id);
     },
 
-    updateAuthor () {
-      window.consle.log('sdf');
+    updateItem (quadrant, id, description) {
+      window.console.log(quadrant, id, description);
+      this.$emit('update-item', quadrant, id, description);
     },
 
     toogleDialogEmoji() {
